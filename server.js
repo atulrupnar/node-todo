@@ -9,6 +9,8 @@ require('dotenv').config();
 
 var index = require('./app/routes/index');
 var users = require('./app/routes/users');
+
+var db = require('./app/config/db');
 var port = process.env.PORT || 7002; // set our port
 
 app.use(bodyParser.json());
@@ -38,5 +40,14 @@ app.use(function(err, req, res, next) {
   res.send({status : false, error : err});
 });
 
-app.listen(port);
+db.connect(process.env.MONGODB_URI, function(err) {
+  if (err) {
+    console.log('Unable to connect to Mongo.')
+    process.exit(1)
+  } else {
+  app.listen(port);
+    console.log('Online ToDo application started at ' + port);
+  }
+});
+
 exports = module.exports = app;

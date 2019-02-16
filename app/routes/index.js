@@ -4,27 +4,14 @@ var passport = require('passport');
 var db = require('./../config/db');
 var emailHelper = require('./../helpers/emailHelper');
 var helper = require('./../helpers/helper');
-
-var getActivationLink = (rand, host, email) => {
-    return "http://"+host+"/verify?email=" + email + "&id="+rand;
-};
+var ObjectID = require('mongodb').ObjectID;
 
 var getUid = () => Math.floor((Math.random() * 100) + 54);
 
 router.post('/signup', helper.apiEndpoint, helper.validateApi, function(req, res) {
-	let input = req.body.input;
 	console.log('start : signup')
-		/*let rand = getUid();
-		let link = getActivationLink(rand, req.get('host'), input.email);
-			emailHelper.sendMail({
-			  to : 'atulrupnar@gmail.com',
-			  subject : "Activate Your ToDo Account",
-			  //text : "welcome to nodemailer",
-			  html : "Dear " + input.firstName +",<br> Please Click on the link to verify your email.<br><a href="+link+">Click here to verify</a>"
-			});
-	*/
+	let input = req.body.input;
 	input.email = input.email.toLowerCase();
-	console.log('email', input.email);
 	var collection = db.getCollection('users');
 	collection.findOne({email : input.email}, function(err, result) {
 		if (result) {
@@ -32,7 +19,7 @@ router.post('/signup', helper.apiEndpoint, helper.validateApi, function(req, res
 				{errorCode : 'AccountExists', msg : 'Account Already Exists'}});
 		}
 		let rand = getUid();
-		let link = getActivationLink(rand, req.get('host'), input.email);
+		let link = helper.getActivationLink(rand, req.get('host'), input.email);
 
 		input.activationCode = rand;
 		input.verifyFlag = false;
@@ -86,8 +73,6 @@ var authenticate = function(req, res, next) {
         if (!user.validate) {
             return res.send({ success: false, error : {msg: info}});
         }
-        console.log('user', user);
-        console.log('firstName', user['firstName']);
         console.log("<== " + user.email + " Logged in [" +
                     new Date() + "] <==");
 
@@ -110,11 +95,12 @@ var authenticate = function(req, res, next) {
 router.post('/login', helper.apiEndpoint, helper.validateApi,
 	authenticate, function(req, res) {});
 
-router.get('tasks/active', isLoggedIn, async function(req, res) {
+router.get('tasks/active', helper.isLoggedIn, async function(req, res) {
 	var email = req.user.email;
 	try {
 	    var collection = db.getCollection('tasks');
-		let data = await collection.find({'email' : email, status : 'active'}).toArray();
+		let data = await collection.find({
+			'email' : email, status : 'active'}).toArray();
 		return res.send({status : true, data});
 	} catch(err) {
 		console.log('error', err);
@@ -122,19 +108,20 @@ router.get('tasks/active', isLoggedIn, async function(req, res) {
 	}
 });
 
-router.get('tasks/completed', isLoggedIn, async function(req, res) {
+router.get('/completedTasks', helper.isLoggedIn, async function(req, res) {
+	console.log('completed tasks : start');
 	var email = req.user.email;
 	try {
 	    var collection = db.getCollection('tasks');
 		let data = await collection.find({'email' : email, status : 'completed'}).toArray();
-		return res.send({status : true, data});
+		return res.send({status : true, data : data});
 	} catch(err) {
 		console.log('error', err);
 		return res.send({status : false, error : err});
 	}
 });
 
-router.get('/getTaskList', isLoggedIn, async function(req, res) {
+router.get('/getTaskList', helper.isLoggedIn, async function(req, res) {
 	var email = req.user.email;
 	console.log(email);
 	try {
@@ -147,7 +134,7 @@ router.get('/getTaskList', isLoggedIn, async function(req, res) {
 	}
 });
 
-router.post('/addTask', isLoggedIn, helper.validateApi, helper.isTaskExist, async function(req, res) {
+router.post('/addTask', helper.isLoggedIn, helper.validateApi, helper.isTaskExist, async function(req, res) {
 	var data = {
 		name : req.body.task,
 		email : req.user.email,
@@ -157,16 +144,14 @@ router.post('/addTask', isLoggedIn, helper.validateApi, helper.isTaskExist, asyn
 	try {
 	    var collection = db.getCollection('tasks');
 		let saveTask = await collection.save(data);
-		return res.send({status : true});
+		return res.send({status : true, data : saveTask});
 	} catch(err) {
 		console.log('error', err);
 		return res.send({status : false, error : err});
 	}
 });
 
-var ObjectID = require('mongodb').ObjectID;
-
-router.post('/updateTask', isLoggedIn, async function(req, res) {
+router.post('/updateTask', helper.isLoggedIn, async function(req, res) {
 	var email = req.user.email;
 	var id = req.body.taskId;
 	console.log(id)
@@ -181,10 +166,10 @@ router.post('/updateTask', isLoggedIn, async function(req, res) {
 	}
 });
 
-router.post('/deleteTask', isLoggedIn, async function(req, res) {
+router.post('/deleteTask', helper.isLoggedIn, async function(req, res) {
 	var email = req.user.email;
 	var id = req.body.taskId;
-	console.log(id)
+	console.log(email, id)
 	try {
 	    var collection = db.getCollection('tasks');
 		let data = await collection.remove({_id : ObjectID(id)});
@@ -212,8 +197,6 @@ router.get('*', function(req, res) {
 
 // route middleware to ensure user is logged in
 function isLoggedIn(req, res, next) {
-	console.log('inside isLoggedIn');
-	console.log(req)
     if (req.isAuthenticated()) {
     	console.log('Logged In');
         return next();

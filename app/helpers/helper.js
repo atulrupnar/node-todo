@@ -97,13 +97,15 @@ let isArray = a => (!!a) && (a.constructor === Array);
 
 // route middleware to ensure user is logged in
 var isLoggedIn = function(req, res, next) {
-    console.log('inside isLoggedIn');
     if (req.isAuthenticated()) {
         return next();
     }
     console.log('not authenticated')
     res.redirect('/');
 }
+
+var getActivationLink = (rand, host, email) => "http://"+ host + 
+    "/verify?email=" + email + "&id="+rand;
 
 module.exports = {
     getErrorResponse : getErrorResponse,
@@ -119,5 +121,6 @@ module.exports = {
     isPhone : isPhone,
     isArray : isArray,
     isObject : isObject,
-    isLoggedIn : isLoggedIn
+    isLoggedIn : isLoggedIn,
+    getActivationLink : getActivationLink
 };

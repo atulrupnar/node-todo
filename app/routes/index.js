@@ -75,8 +75,6 @@ router.get('/verify', async function(req, res) {
 
 var authenticate = function(req, res, next) {
     passport.authenticate('local-login', function (err, user, info) {
-		console.log("in here 1");
-    	console.log(err, user, info)
         if (err) {
         	console.log('err', err)
             return next(err);
@@ -85,7 +83,6 @@ var authenticate = function(req, res, next) {
 			console.log('!user');
             return res.send({ success: false, error : {msg: info}});
         }
-        console.log('user.validate', user.verifyFlag)
         if (!user.validate) {
             return res.send({ success: false, error : {msg: info}});
         }
@@ -93,7 +90,17 @@ var authenticate = function(req, res, next) {
         console.log('firstName', user['firstName']);
         console.log("<== " + user.email + " Logged in [" +
                     new Date() + "] <==");
-	    return res.send({status : true});
+
+        req.logIn(user, function (err) {
+            if (err) {
+            	console.log('login error', err);
+			    return res.send({status : false, error : {msg : 'Internal Server error'}});
+            }
+            req.auth = {};
+            req.auth.user = user;
+            req.auth.info = info;
+		    return res.send({status : true});
+        });
 	})(req, res, next);
 };
 
@@ -133,7 +140,7 @@ router.get('/getTaskList', isLoggedIn, async function(req, res) {
 	try {
 	    var collection = db.getCollection('tasks');
 		let data = await collection.find({'email' : email}).sort({created : -1}).toArray();
-		return res.send({status : true, data});
+		return res.send({status : true, data : data});
 	} catch(err) {
 		console.log('error', err);
 		return res.send({status : false, error : err});
@@ -206,6 +213,7 @@ router.get('*', function(req, res) {
 // route middleware to ensure user is logged in
 function isLoggedIn(req, res, next) {
 	console.log('inside isLoggedIn');
+	console.log(req)
     if (req.isAuthenticated()) {
     	console.log('Logged In');
         return next();

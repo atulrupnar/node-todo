@@ -26,12 +26,16 @@ var userSchema = mongoose.Schema({
     lastName : String,
     email : String,
     password : String,
-    type : String,
-    address : String
+    verifyFlag : Boolean,
+    activationCode : String
 });
 
 userSchema.methods.validPassword = function (pwd) {
     return (this.password === pwd);
+};
+
+userSchema.methods.isUserVerified = function () {
+    return this.verifyFlag;
 };
 
 module.exports = mongoose.model('User', userSchema);

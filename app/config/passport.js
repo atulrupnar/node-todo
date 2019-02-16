@@ -35,10 +35,14 @@ module.exports = function(passport) {
 
                 // if no user is found, return the message
                 if (!user)
-                    return done(null, false, 1); //No user found.
+                    return done(null, false, 'Account not exists'); //No user found.
+
+                if (!user.isUserVerified()) {
+                    return done(null, false, 'Please activate your account first'); //'Account Not Validated'
+                }
 
                 if (!user.validPassword(password))
-                    return done(null, false, 2); //'Oops! Wrong password.'
+                    return done(null, false, 'Email and password are not matching'); //'Oops! Wrong password.'
 
                 // all is well, return user
                 else

@@ -3,7 +3,9 @@ angular.module('DashboardCtrl', []).controller('DashboardController',['$scope', 
  	$http, $location, GetPost, ngToast) {
 
     $scope.getTasks = function () {
+    	console.log('inside getTasks');
 		GetPost.get({url : '/getTaskList'}, function(err, data) {
+			console.log(err);
 			console.log('tasks', data);
 			$scope.tasks = data.data;
 	    });
@@ -43,14 +45,14 @@ angular.module('DashboardCtrl', []).controller('DashboardController',['$scope', 
 	    });
     };
 
-    $scope.updateTask = function (status) {
+    /*$scope.updateTask = function (status) {
     	var r = status=='completed' ? true:false;
     	console.log('checked : ', r);
     	return r;
-    }
+    }*/
 
-    $scope.updateTask = function (id) {
-    	if (t.status == 'completed') {
+    $scope.updateTask = function (id, status) {
+    	if (status == 'completed') {
     		return;
     	}
     	var data = {

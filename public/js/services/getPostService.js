@@ -17,9 +17,10 @@ angular.module('GetPostService', []).factory('GetPost', ['$http', '$rootScope', 
                 return cb(1, resp.data);
             }, function(resp) {
                 /* Failure */
+                $rootScope.isMainLoader = false;
                 console.log("post: Error received for ");
                 console.log(resp.data);
-                return cb(1);
+                return cb(1, resp.data);
             });
         };
 
@@ -31,22 +32,40 @@ angular.module('GetPostService', []).factory('GetPost', ['$http', '$rootScope', 
             .then(function(resp) {
                 $rootScope.isMainLoader = false;
                 $rootScope.isLoggedIn = true;
-                if (!(resp.data && resp.data.success)) {
+                if (!(resp.data && resp.data.status)) {
                     console.log("get: could not get data to ");
                     return cb(1, resp.data);
                 }
                 return cb(0, resp.data);
             }, function(resp) {
                 /* Failure */
+                $rootScope.isMainLoader = false;
                 console.log("get:   Error received for ");
 
-                return cb(1);
+                return cb(1, resp.data);
             });
+        };
+
+        var showAlert = function(msg, className='success') {
+            console.log('inside showAlert');
+            ngToast.create({
+                className: className, // "success", "info", "warning" or "danger"
+                horizontalPosition : 'center',
+                verticalPosition : 'top',
+                content: msg
+            });
+        };
+
+        var isEmail = function(email) {
+            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(email);
         };
 
         var service = {
             post : post,
-            get : get
+            get : get,
+            showAlert : showAlert,
+            isEmail : isEmail
         };
 
         return service;

@@ -1,6 +1,5 @@
 angular.module('LoginCtrl', []).controller('LoginController',['$scope', '$rootScope', '$http', 
-			'$location', 'GetPost',  function($scope, $rootScope, $http, $location, GetPost) {
-
+			'$location', 'GetPost', 'ngToast',  function($scope, $rootScope, $http, $location, GetPost, ngToast) {
 
 	$scope.login = function() {
 		console.log('inside login');

@@ -1,4 +1,4 @@
-var url = 'mongodb://localhost:27017/todo_app';
+var url =  process.env.MONGODB_URI + 'todo_app';
 var MongoClient = require('mongodb').MongoClient;
 
 var state = {

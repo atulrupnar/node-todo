@@ -7,11 +7,12 @@ var helper = require('./../helpers/helper');
 var logger = require("./../config/logger");
 var ObjectID = require('mongodb').ObjectID;
 
-/*
-	logger usage => debug, info, error
-*/
-
 var getUid = () => Math.floor((Math.random() * 100) + 54);
+
+router.get('/logout', isLoggedIn, function(req, res){
+  req.logout();
+  res.redirect('/');
+});
 
 router.post('/signup', helper.apiEndpoint, helper.validateApi, function(req, res) {
 	logger.debug('start : signup')

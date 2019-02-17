@@ -21,12 +21,9 @@ let clearGlobles = () => {
 }
 
 var test = function(value, validation) {
-    console.log(value, validation)
     if (!validation) return;
     if (validation.required && !value) {
-        console.log('inside required')
         errorXX = errorCodes.getErrorCodes('EmptyResource');
-        console.log(errorXX);
         throw Error('');
     }
 
@@ -53,9 +50,7 @@ var test = function(value, validation) {
     }
 
     if (validation.email && value && !helper.isEmail(value)) {
-        console.log('isEmail')
         errorXX = errorCodes.getErrorCodes('InvalidEmail');
-        console.log('errorXX', errorXX)
         throw Error('');
     }
 
@@ -77,8 +72,6 @@ var test = function(value, validation) {
 
 //loop through all input parameters to sanity test
 var validate = function(iObj, vObj) {
-    console.log('iObj', iObj);
-    console.log('vObj', vObj);
 	try {
 		for (var key in vObj) {
             if (helper.isArray(iObj[key])) {
@@ -97,6 +90,7 @@ var validate = function(iObj, vObj) {
             }
 		}
 	} catch (e) {
+        console.log('validation error', e);
         error = true;
         errorXX.field = errorAt;
         return {error : true, msg : errorXX};
@@ -119,10 +113,12 @@ var vTypes = {
 //validation object structure
 var apiObj = {
     'post-signup' : {
-        firstName : vTypes.nameReq,
-        lastName : vTypes.name,
-        email : vTypes.emailReq,
-        password : vTypes.password
+        input : {
+            firstName : vTypes.nameReq,
+            lastName : vTypes.name,
+            email : vTypes.emailReq,
+            password : vTypes.password
+        }
     },
     'post-login' : {
         email : vTypes.email,

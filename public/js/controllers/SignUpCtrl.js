@@ -38,7 +38,7 @@ SignUpCtrl.controller('SignUpController',['$scope', '$rootScope',
 			console.log(err, resp);
 			if (!resp.status) {
 				GetPost.showAlert(resp.error.msg, 'danger');
-				$scope.input = {};
+				//$scope.input = {};
 			} else {
 				GetPost.showAlert('Registration Successful', 'success');
 				$location.path('/login');

@@ -5,7 +5,7 @@ COPY package.json /app
 RUN npm install
 COPY . /app
 WORKDIR /app/public
-RUN bower install
+RUN bower install --allow-root
 WORKDIR /app
 CMD node server.js
 EXPOSE 7001

@@ -2,7 +2,6 @@
 var LocalStrategy    = require('passport-local').Strategy;
 var mongoose = require('mongoose');
 var User = require('../models/user');
-console.log('User', User);
 mongoose.connect(process.env.MONGODB_URI); // connect to our database
 
 module.exports = function(passport) {

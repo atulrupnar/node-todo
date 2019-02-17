@@ -4,12 +4,17 @@ var passport = require('passport');
 var db = require('./../config/db');
 var emailHelper = require('./../helpers/emailHelper');
 var helper = require('./../helpers/helper');
+var logger = require("./../config/logger");
 var ObjectID = require('mongodb').ObjectID;
+
+/*
+	logger usage => debug, info, error
+*/
 
 var getUid = () => Math.floor((Math.random() * 100) + 54);
 
 router.post('/signup', helper.apiEndpoint, helper.validateApi, function(req, res) {
-	console.log('start : signup')
+	logger.debug('start : signup')
 	let input = req.body.input;
 	input.email = input.email.toLowerCase();
 	var collection = db.getCollection('users');
@@ -61,6 +66,7 @@ router.get('/verify', async function(req, res) {
 });
 
 var authenticate = function(req, res, next) {
+	logger.debug("login : start");
     passport.authenticate('local-login', function (err, user, info) {
         if (err) {
         	console.log('err', err)
@@ -89,9 +95,6 @@ var authenticate = function(req, res, next) {
 	})(req, res, next);
 };
 
-/*passport.authenticate('local-login', {
-            failureRedirect : '/login'
-        })*/
 router.post('/login', helper.apiEndpoint, helper.validateApi,
 	authenticate, function(req, res) {});
 
@@ -109,7 +112,7 @@ router.get('tasks/active', helper.isLoggedIn, async function(req, res) {
 });
 
 router.get('/completedTasks', helper.isLoggedIn, async function(req, res) {
-	console.log('completed tasks : start');
+	logger.debug('completed tasks : start')
 	var email = req.user.email;
 	try {
 	    var collection = db.getCollection('tasks');
@@ -161,7 +164,7 @@ router.post('/updateTask', helper.isLoggedIn, async function(req, res) {
 			{$set : {status : 'completed'}});
 		return res.send({status : true, data : data});
 	} catch(err) {
-		console.log('error', err);
+		logger.error('updateTask error', err)
 		return res.send({status : false, error : err});
 	}
 });
@@ -175,7 +178,7 @@ router.post('/deleteTask', helper.isLoggedIn, async function(req, res) {
 		let data = await collection.remove({_id : ObjectID(id)});
 		return res.send({status : true, data : data});
 	} catch(err) {
-		console.log('error', err);
+		logger.error('deleteTask error', err)
 		return res.send({status : false, error : err});
 	}
 });

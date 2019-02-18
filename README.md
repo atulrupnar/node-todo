@@ -100,5 +100,3 @@ Here are test user account credentials to get started with :
 
 		npm start
 7. visit http://localhost:7001 on your favourite browser
-
-# SECURITY MEASURES

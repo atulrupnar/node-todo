@@ -2,7 +2,8 @@ const db = require('./../config/db');
 const errorCodes = require('./errorCodes');
 const url = require('url');
 var validationHelper = require('./validation');
-//const config = require('./../config/config');
+const uuidv4 = require('uuid/v4');
+// ⇨ '10ba038e-48da-487b-96e8-8d3b99b6d18a'
 
 let isEmptyObject = obj => !Object.keys(obj).length > 0;
 
@@ -104,6 +105,8 @@ var isLoggedIn = function(req, res, next) {
     res.redirect('/');
 }
 
+let getUuid = () => uuidv4();
+
 var getActivationLink = (rand, host, email) => "http://"+ host + 
     "/verify?email=" + email + "&id="+rand;
 
@@ -122,5 +125,6 @@ module.exports = {
     isArray : isArray,
     isObject : isObject,
     isLoggedIn : isLoggedIn,
-    getActivationLink : getActivationLink
+    getActivationLink : getActivationLink,
+    getUuid : getUuid
 };

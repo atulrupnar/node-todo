@@ -7,8 +7,6 @@ var helper = require('./../helpers/helper');
 var logger = require("./../config/logger");
 var ObjectID = require('mongodb').ObjectID;
 
-var getUid = () => Math.floor((Math.random() * 100) + 54);
-
 router.get('/logout', isLoggedIn, function(req, res){
   req.logout();
   res.redirect('/');
@@ -24,7 +22,7 @@ router.post('/signup', helper.apiEndpoint, helper.validateApi, function(req, res
 			return res.send({status : false, error :
 				{errorCode : 'AccountExists', msg : 'Account Already Exists'}});
 		}
-		let rand = getUid();
+		let rand = helper.getUuid();
 		let link = helper.getActivationLink(rand, req.get('host'), input.email);
 
 		input.activationCode = rand;
@@ -91,7 +89,7 @@ var authenticate = function(req, res, next) {
             req.auth = {};
             req.auth.user = user;
             req.auth.info = info;
-		    return res.send({status : true});
+		    return res.send({status : true, data : req.user});
         });
 	})(req, res, next);
 };
@@ -133,7 +131,7 @@ router.get('/getTaskList', helper.isLoggedIn, async function(req, res) {
 		let data = await collection.find({'email' : email}).sort({created : -1}).toArray();
 		return res.send({status : true, data : data});
 	} catch(err) {
-		console.log('error', err);
+		logger.error('error', err);
 		return res.send({status : false, error : err});
 	}
 });
@@ -162,7 +160,7 @@ router.post('/updateTask', helper.isLoggedIn, async function(req, res) {
 	try {
 	    var collection = db.getCollection('tasks');
 		let data = await collection.update({_id : ObjectID(id)},
-			{$set : {status : 'completed'}});
+			{$set : {status : 'completed', completed : Date.now()}});
 		return res.send({status : true, data : data});
 	} catch(err) {
 		logger.error('updateTask error', err)
@@ -186,7 +184,8 @@ router.post('/deleteTask', helper.isLoggedIn, async function(req, res) {
 
 router.get('/isLoggedIn', function(req, res) {
 	if (req.isAuthenticated()) {
-		return res.send({status : true});
+		console.log({status : true, data : req.user})
+		return res.send({status : true, data : req.user});
 	}
 	return res.send({status : false});
 });

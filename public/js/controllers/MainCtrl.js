@@ -27,6 +27,8 @@ angular.module('MainCtrl', []).controller('MainController',['$scope', '$rootScop
 	$scope.startApp = function() {
 		GetPost.get({url : '/isLoggedIn'}, function(err, resp) {
 			if (resp.status) {
+				$rootScope.user = resp.data;
+				console.log(resp.data)
 				$location.path('/dashboard');
 			}
         });
@@ -51,6 +53,7 @@ angular.module('MainCtrl', []).controller('MainController',['$scope', '$rootScop
 				return;
 			} else {
 				GetPost.showAlert('You are successfully logged in', 'success');
+				$rootScope.user = resp.data;
 				$location.path('/dashboard');
 			}
 

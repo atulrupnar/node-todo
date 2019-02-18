@@ -2,6 +2,18 @@ angular.module('DashboardCtrl', []).controller('DashboardController',['$scope', 
  '$http', '$location', 'GetPost', 'ngToast',  function($scope, $rootScope,  
  	$http, $location, GetPost, ngToast) {
 
+	$scope.startApp = function() {
+		GetPost.get({url : '/isLoggedIn'}, function(err, resp) {
+			if (resp.status) {
+				console.log('user', resp.data)
+				$rootScope.user = resp.data;
+				$scope.user = resp.data
+			} else {
+				$location.path('/');
+			}
+        });
+	};
+
     $scope.getTasks = function () {
     	console.log('inside getTasks');
 		GetPost.get({url : '/getTaskList'}, function(err, data) {
@@ -11,7 +23,19 @@ angular.module('DashboardCtrl', []).controller('DashboardController',['$scope', 
 	    });
     };
 
+    $scope.startApp();
     $scope.getTasks();
+
+	$scope.logOut = function () {
+		var data = { url : '/logout' };
+		GetPost.get(data, function(err, resp) {
+			if (!resp.status) {	
+				$location.path('/login');
+			} else {
+				window.location.href = "/login";
+		}
+	});
+	}
 
 	$scope.tasks = {};
     $scope.addTask = function () {

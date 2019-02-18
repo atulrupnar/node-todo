@@ -1,20 +1,20 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" style="background: #63738a">
 <head>
     <meta charset="UTF-8">
     <base href="/">
 
-    <title ng-href="/dashboard">Infactor</title>
+    <title ng-href="/dashboard">Online TODO List</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta content="" name="description" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <link rel="shortcut icon" href="assets/images/favicon.png" type="image/x-icon" /><!-- Favicon -->
-    <link rel="apple-touch-icon-precomposed" href="assets/images/apple-touch-icon-57.png"><!-- For iPhone -->
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/images/apple-touch-icon-114.png"><!-- For iPhone 4 Retina display -->
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/images/apple-touch-icon-72.png"><!-- For iPad -->
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/images/apple-touch-icon-144.png"><!-- For iPad Retina display -->
+    <link rel="shortcut icon" href="assets/images/favicon.jpg" type="image/x-icon" />
+    <!-- <link rel="apple-touch-icon-precomposed" href="assets/images/apple-touch-icon-57.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/images/apple-touch-icon-114.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/images/apple-touch-icon-72.png">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/images/apple-touch-icon-144.png"> -->
 
     <!-- CORE CSS FRAMEWORK - START -->
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
@@ -65,43 +65,11 @@
 }
 </style>
 
-<body ng-app="sampleApp" ng-controller="NerdController">
+<body ng-app="sampleApp" style="background: #63738a" ng-controller="NerdController">
     <div class="ajax-loader-div" ng-show="isMainLoader">
         <img src="assets/images/loader1.gif" class="ajax-loader">
     </div>
    <toast></toast>
-    <!-- <div class="page-topbar">
-        <div class="container">
-            <div class="logo-area" ng-click="">
-            </div>
-            <div class="quick-area" ng-show="isLoggedIn">
-                <div class='pull-right'>
-                    <ul class="info-menu right-links list-inline list-unstyled">
-                        <li class="balaceTop">Hello</li>
-                        <li class="profile">
-                            <a href="#" data-toggle="dropdown" class="toggle" id="dropdownToggle">
-                                <span>{{name}}
-                                    <i class="fa fa-angle-down"></i>
-                                </span>
-                            </a>
-                            <ul class="dropdown-menu profile animated fadeIn" role="menu" id="dropdownMenu">
-                                <li class="last">
-                                    <a href="" ng-click="logOut()">
-                                        <i class="fa fa-lock"></i>
-                                        Logout
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div> -->
-
-                
-
-
         <!-- ANGULAR DYNAMIC CONTENT -->
         <div ng-view></div>
     <!-- <footer>

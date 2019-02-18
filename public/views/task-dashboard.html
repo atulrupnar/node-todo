@@ -8,7 +8,7 @@ body{
 .todolist{
     background-color:#FFF;
     padding:20px 20px 10px 20px;
-    margin-top:30px;
+    margin-top:80px;
 }
 .todolist h1{
     margin:0;
@@ -45,6 +45,38 @@ li.ui-state-default:last-child{
     margin-top:10px;
 }
 </style>
+
+    <div class="page-topbar">
+        <div class="container">
+            <div class="logo-area" ng-click="">
+            </div>
+            <div class="quick-area" ng-show="isLoggedIn">
+                <div class='pull-right'>
+                    <ul class="info-menu right-links list-inline list-unstyled">
+                        <li class="balaceTop"><b>Welcome {{user.firstName}}</b> </li>
+                        <li><a href="" class="balaceTop" ng-click="logOut()"><i class="fa fa-lock"></i>
+                                        Logout
+                                    </a></li>
+                        <li class="profile">
+                            <!-- <a href="#" data-toggle="dropdown" class="toggle" id="dropdownToggle">
+                                <span>{{user.firstName}}
+                                    <i class="fa fa-angle-down"></i>
+                                </span>
+                            </a> -->
+                            <ul class="dropdown-menu profile animated fadeIn" role="menu" id="dropdownMenu">
+                                <li class="last">
+                                    <a href="" ng-click="logOut()">
+                                        <i class="fa fa-lock"></i>
+                                        Logout
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 
 <div class="container">
     <div class="row">

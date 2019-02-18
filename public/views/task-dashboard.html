@@ -93,7 +93,7 @@ li.ui-state-default:last-child{
                 <li>
                     <div class="checkbox" ng-repeat="t in tasks| filter: filterTasks">
                         <label>
-                            <input type="checkbox" ng-click="updateTask(t._id, t.status)" value="" ng-checked="t.status=='completed' ? true:false" ng-disabled="t.status=='completed' ? true:false"/>{{t.name}}<button ng-click="deleteTask(t._id)" class="remove-item btn btn-default btn-xs pull-right"><span class="glyphicon glyphicon-remove"></span></button>
+                            <input type="checkbox" ng-click="updateTask(t._id, t.status)" value="" ng-checked="t.status=='completed' ? true:false" ng-disabled="t.status=='completed' ? true:false"/>{{t.name}}<button ng-click="deleteTask(t._id)" class="remove-item btn btn-default btn-xs pull-right"><i class="fa fa-trash" aria-hidden="true"></i></button>
                         </label>
                     </div>
                 </li>
